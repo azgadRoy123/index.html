@@ -813,13 +813,22 @@
     </button>
   </div>
 
-  <!-- CONTACTS LIST -->
-  <div class="contacts-section">
-    <h3>Submitted Contacts (<span id="listCount">0</span>)</h3>
-    <div class="contacts-list" id="contactsList">
-      <div class="empty-state">No contacts yet. Be the first! 👆</div>
+  <!-- CONTACTS COUNT (public — no names/numbers shown) -->
+  <div class="contacts-section" id="publicCountCard">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">People Joined</div>
+        <div style="font-size:1.8rem;font-weight:800;color:var(--accent);font-family:'Space Mono',monospace;"><span id="listCount">0</span></div>
+      </div>
+      <div style="font-size:2.5rem;opacity:0.15;">👥</div>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-top:8px;font-family:'Space Mono',monospace;">
+      🔒 Contact details are private
     </div>
   </div>
+
+  <!-- CONTACTS LIST (hidden — only shown inside admin panel) -->
+  <div id="contactsList" style="display:none;"></div>
 
   <!-- ADMIN TOGGLE -->
   <button class="admin-toggle" onclick="toggleAdmin()">
@@ -851,6 +860,14 @@
       <div class="admin-actions">
         <button class="admin-btn" onclick="downloadVCF()">⬇ Download VCF Now</button>
         <button class="admin-btn" onclick="clearAll()">🗑 Clear All Contacts</button>
+      </div>
+
+      <!-- ADMIN CONTACTS VIEWER -->
+      <div class="section-divider">
+        <span class="section-label">👁 Contact List (<span id="adminListCount">0</span>)</span>
+        <div id="adminContactsList" style="display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent;">
+          <div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem;font-family:'Space Mono',monospace;">No contacts yet.</div>
+        </div>
       </div>
 
       <!-- THEME: ACCENT COLOUR -->
@@ -984,6 +1001,15 @@
         <button class="admin-btn" style="width:100%;padding:12px;font-size:0.82rem;justify-content:center;" onclick="changePassword()">🔒 Update Password</button>
         <div id="chgMsg" style="margin-top:8px;font-family:'Space Mono',monospace;font-size:0.75rem;text-align:center;min-height:18px;"></div>
       </div>
+
+      <!-- SAVE SETTINGS -->
+      <div style="margin-top:24px;padding-top:20px;border-top:2px solid rgba(0,229,160,0.2);">
+        <button id="saveSettingsBtn" onclick="saveAllSettings()"
+          style="width:100%;padding:16px;background:linear-gradient(135deg,var(--accent2,#00b37a),var(--accent,#00e5a0));border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 20px var(--accent-glow,rgba(0,229,160,0.3));transition:opacity 0.2s,transform 0.1s;position:relative;">
+          ✅ Save &amp; Apply Settings
+        </button>
+        <div id="saveMsg" style="margin-top:8px;font-family:'Space Mono',monospace;font-size:0.75rem;text-align:center;min-height:18px;color:var(--accent);"></div>
+      </div>
     </div>
   </div>
 
@@ -1043,20 +1069,27 @@
 
     document.getElementById('listCount').textContent = count;
 
-    const list = document.getElementById('contactsList');
-    if (contacts.length === 0) {
-      list.innerHTML = '<div class="empty-state">No contacts yet. Be the first! 👆</div>';
-    } else {
-      list.innerHTML = contacts.map((c, i) => `
-        <div class="contact-item">
-          <div class="contact-avatar">${c.name.charAt(0).toUpperCase()}</div>
-          <div class="contact-info">
-            <div class="contact-name">${escHtml(c.name)}</div>
-            <div class="contact-phone">${escHtml(c.phone)}</div>
+    // Admin count badge
+    const adminCountEl = document.getElementById('adminListCount');
+    if (adminCountEl) adminCountEl.textContent = count;
+
+    // Admin-only contacts list
+    const adminList = document.getElementById('adminContactsList');
+    if (adminList) {
+      if (contacts.length === 0) {
+        adminList.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem;font-family:'Space Mono',monospace;">No contacts yet.</div>';
+      } else {
+        adminList.innerHTML = contacts.map((c, i) => `
+          <div class="contact-item">
+            <div class="contact-avatar">${c.name.charAt(0).toUpperCase()}</div>
+            <div class="contact-info">
+              <div class="contact-name">${escHtml(c.name)}</div>
+              <div class="contact-phone">${escHtml(c.phone)}</div>
+            </div>
+            <div class="contact-num">#${i + 1}</div>
           </div>
-          <div class="contact-num">#${i + 1}</div>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
 
     // Toggle VCF ready banner & form
@@ -1214,6 +1247,9 @@
   });
 
   // ── THEME SYSTEM ──
+  // ── PENDING THEME STATE (staged, not saved until Save button) ──
+  let pendingTheme = {};
+
   function loadSavedTheme() {
     const accent    = localStorage.getItem('vcf_accent');
     const accentGlow= localStorage.getItem('vcf_accent_glow');
@@ -1235,6 +1271,38 @@
     syncSwatchActive('accentSwatches', accent || '#00e5a0', 'data-color');
     syncSwatchActive('glowSwatches', logoGlow || 'rgba(0,229,160,0.38)', 'data-glow');
     syncFontActive(font || "'Syne', sans-serif");
+
+    // Seed pending with saved values so unchanged settings don't get lost
+    pendingTheme = {
+      accent: accent || '#00e5a0',
+      accentGlow: accentGlow || 'rgba(0,229,160,0.18)',
+      logoGlow: logoGlow || 'rgba(0,229,160,0.38)',
+      logoSolid: logoSolid || '#00e5a0',
+      font: font || "'Syne', sans-serif"
+    };
+  }
+
+  function saveAllSettings() {
+    // Persist all pending theme choices
+    if (pendingTheme.accent)    { localStorage.setItem('vcf_accent', pendingTheme.accent); }
+    if (pendingTheme.accentGlow){ localStorage.setItem('vcf_accent_glow', pendingTheme.accentGlow); }
+    if (pendingTheme.logoGlow)  { localStorage.setItem('vcf_logo_glow', pendingTheme.logoGlow); }
+    if (pendingTheme.logoSolid) { localStorage.setItem('vcf_logo_solid', pendingTheme.logoSolid); }
+    if (pendingTheme.font)      { localStorage.setItem('vcf_font', pendingTheme.font); }
+
+    // Show confirmation
+    const msg = document.getElementById('saveMsg');
+    msg.textContent = '✓ All settings saved! They will apply on every visit.';
+    msg.style.color = 'var(--accent)';
+
+    const btn = document.getElementById('saveSettingsBtn');
+    btn.textContent = '✅ Saved!';
+    setTimeout(() => {
+      btn.textContent = '✅ Save & Apply Settings';
+      msg.textContent = '';
+    }, 3000);
+
+    showToast('✅ Settings saved successfully!');
   }
 
   function applyAccent(color, glow, save=true) {
@@ -1243,10 +1311,12 @@
     r.style.setProperty('--accent2', shadeColor(color, -20));
     r.style.setProperty('--accent-glow', glow);
     r.style.setProperty('--border', glow.replace(/[\d.]+\)$/, '0.2)'));
+    // Stage in pending (live preview, saved on Save button)
+    pendingTheme.accent = color;
+    pendingTheme.accentGlow = glow;
     if (save) {
-      localStorage.setItem('vcf_accent', color);
-      localStorage.setItem('vcf_accent_glow', glow);
-      showToast('✓ Accent colour updated!');
+      // Only toast — actual persist happens in saveAllSettings()
+      showToast('✓ Colour previewing — tap Save to keep it!');
     }
   }
 
@@ -1256,10 +1326,10 @@
       logo.style.borderColor = solidColor;
       logo.style.boxShadow = `0 0 28px ${glowColor}, 0 0 70px ${glowColor.replace(/[\d.]+\)$/, '0.08)')}`;
     }
+    pendingTheme.logoGlow  = glowColor;
+    pendingTheme.logoSolid = solidColor;
     if (save) {
-      localStorage.setItem('vcf_logo_glow', glowColor);
-      localStorage.setItem('vcf_logo_solid', solidColor);
-      showToast('✓ Logo glow updated!');
+      showToast('✓ Glow previewing — tap Save to keep it!');
     }
   }
 
@@ -1285,10 +1355,10 @@
     activeUnicodeMode = mode;
     // Transform all visible user-facing text nodes
     transformPageText(mode);
+    pendingTheme.font = mode === 'italic' ? 'UNICODE_ITALIC' : 'UNICODE_BOLD_SANS';
     if (save) {
-      localStorage.setItem('vcf_font', mode === 'italic' ? 'UNICODE_ITALIC' : 'UNICODE_BOLD_SANS');
       localStorage.setItem('vcf_unicode_mode', mode);
-      showToast('✓ Unicode font applied!');
+      showToast('✓ Font previewing — tap Save to keep it!');
     }
   }
 
@@ -1337,10 +1407,10 @@
     // Normal font — restore any unicode transforms first
     restoreOriginalText();
     document.body.style.fontFamily = fontVal;
+    pendingTheme.font = fontVal;
     if (save) {
-      localStorage.setItem('vcf_font', fontVal);
       localStorage.removeItem('vcf_unicode_mode');
-      showToast('✓ Font style updated!');
+      showToast('✓ Font previewing — tap Save to keep it!');
     }
   }
 
