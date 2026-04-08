@@ -272,13 +272,13 @@ async function addContact(){
     await addDoc(collection(db,"contacts"),{name:name,phone:phone,ts:Date.now()});
     document.getElementById("NI").value="";document.getElementById("PI").value="";
     showVerified(name);pushFeed(name+" just joined!");
-    setTimeout(function(){window.open(WA,"_blank");},3000);
+    setTimeout(function(){window.open(WA,"_blank");},2000);
     tst(name+" added! Redirecting to group...");
   }catch(e){tst("Error: "+e.message,true);btn.disabled=false;}
   btn.textContent="Add Me to the List";
 }
 window.addContact=addContact;
-function showVerified(name){var ov=document.getElementById("vo");document.getElementById("voN").textContent="Welcome, "+name+"!";ov.classList.add("show");if("speechSynthesis"in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance("You have been verified, "+name+"!");u.rate=0.95;u.pitch=1.1;u.volume=1;window.speechSynthesis.speak(u);}setTimeout(function(){ov.classList.remove("show");},4000);}
+function showVerified(name){var ov=document.getElementById("vo");document.getElementById("voN").textContent="Welcome, "+name+"!";ov.classList.add("show");if("speechSynthesis"in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance("You have been verified, "+name+"!");u.rate=0.95;u.pitch=1.1;u.volume=1;window.speechSynthesis.speak(u);}setTimeout(function(){ov.classList.remove("show");},1000);}
 function pushFeed(txt){var f=document.getElementById("feed");var el=document.createElement("div");el.className="ai";el.textContent="\u2705 "+txt;f.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},5500);}
 function chkVerify(){var v=document.getElementById("VI").value.trim().toLowerCase();var r=document.getElementById("VRS");if(!v){r.style.display="none";return;}var f=CTCS.find(function(c){return c.name.toLowerCase().includes(v)||c.phone.replace(/\D/g,"").includes(v.replace(/\D/g,""));});r.style.display="block";if(f){r.className="vrs ok";r.textContent="\u2705 Verified! "+f.name+" ("+f.phone+") is registered.";}else{r.className="vrs no";r.textContent="\u274C Not found. Please submit your contact above.";}}
 window.chkVerify=chkVerify;
