@@ -9,7 +9,7 @@
 :root{--bg:#0a0a0f;--bg2:#1a1a24;--ac:#00e5a0;--ac2:#00b37a;--ag:rgba(0,229,160,0.18);--w:#ff6b35;--tx:#e8eaf0;--mu:#6b7280;--bd:rgba(0,229,160,0.15);--cd:rgba(255,255,255,0.03);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--tx);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;padding-bottom:80px;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,160,0.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,229,160,0.03)1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,160,0.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,229,160,0.03)1px,transparent 1px);background-size:40px 40px;pointer-events:auto;z-index:0;}
 .wrap{max-width:680px;margin:0 auto;padding:0 20px 60px;position:relative;z-index:1;}
 header{text-align:center;padding:40px 0 26px;}
 .lw{margin:0 auto 18px;width:110px;height:110px;border-radius:50%;overflow:hidden;border:2.5px solid var(--ac);background:#000;animation:lp 4s ease-in-out infinite;}
@@ -55,7 +55,7 @@ input::placeholder{color:#3a3a4a;}
 .vrs{margin-top:10px;font-family:'Space Mono',monospace;font-size:0.8rem;padding:9px 13px;border-radius:8px;display:none;}
 .vrs.ok{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.28);color:var(--ac);}
 .vrs.no{background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.28);color:var(--w);}
-#feed{position:fixed;bottom:82px;left:14px;z-index:150;pointer-events:none;display:flex;flex-direction:column;gap:5px;max-width:290px;}
+#feed{position:fixed;bottom:82px;left:14px;z-index:150;pointer-events:auto;display:flex;flex-direction:column;gap:5px;max-width:290px;}
 .ai{background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:9px;padding:7px 12px;font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--ac);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:si .4s ease,fo .5s ease 4.5s forwards;}
 @keyframes si{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 @keyframes fo{from{opacity:1;}to{opacity:0;}}
