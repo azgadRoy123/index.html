@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCF Contact Collection</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <h1>Contact Collection</h1>
+    <div id="admin-panel">
+        <h2>Admin Panel</h2>
+        <form id="contact-form">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <button type="submit">Add Contact</button>
+        </form>
+        <div id="feedback"></div>
+    </div>
+    <script>
+      document.getElementById('contact-form').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const name = document.getElementById('name').value;
+          const email = document.getElementById('email').value;
+          db.collection('contacts').add({
+              name: name,
+              email: email
+          }).then(function() {
+              document.getElementById('feedback').innerText = 'Contact added!';
+              document.getElementById('contact-form').reset();
+          });
+      });
+    </script>
+    <script>
+      // Analytics code can go here
+    </script>
+</body>
+</html>
