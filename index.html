@@ -1,0 +1,3035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azgad Roy — VCF Contact Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;700&family=Audiowide&family=Russo+One&family=Oxanium:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent: #00ffa3;
+            --glow: #00ffa3;
+            --bg: #000000;
+            --card-bg: #111111;
+            --text: #ffffff;
+            --text-secondary: #aaaaaa;
+            --font-family: 'Syne', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            box-shadow: 0 0 30px rgba(0, 255, 163, 0.4), 0 0 60px rgba(0, 255, 163, 0.2);
+            filter: drop-shadow(0 0 15px var(--glow));
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent), #00cc88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* MAIN CONTAINER */
+        .main-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 600;
+            font-family: var(--font-family);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            text-shadow: 0 0 10px rgba(0, 255, 163, 0.3);
+        }
+
+        .tab-btn:hover {
+            color: var(--accent);
+        }
+
+        /* TAB CONTENT */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CONTACT FORM */
+        .form-section {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 163, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 163, 0.3);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--font-family);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 163, 0.08);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(0, 255, 163, 0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .country-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .country-selector select {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .country-selector input {
+            flex: 2;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #00cc88);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 163, 0.5);
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 12px 24px;
+            background: var(--accent);
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-family);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 255, 163, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(0, 255, 163, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 163, 0.3);
+        }
+
+        .btn-danger {
+            background: #ff3c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 20px rgba(255, 60, 60, 0.4);
+        }
+
+        /* VERIFIED MODE SECTION */
+        .verified-mode-section {
+            background: rgba(0, 255, 163, 0.05);
+            border: 1px solid rgba(0, 255, 163, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .verified-mode-section h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .share-instruction {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .tracking-code-box {
+            background: rgba(0, 255, 163, 0.1);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .tracking-code {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+        }
+
+        /* ACTIVITY FEED */
+        .activity-feed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 163, 0.3);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            color: var(--text);
+            font-size: 13px;
+            animation: slideIn 0.3s ease;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(20px); }
+        }
+
+        /* MEMBER WALL */
+        .member-wall {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .member-bubble {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: rgba(0, 255, 163, 0.1);
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+            padding: 8px;
+            animation: pop 0.5s ease;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* VERIFIED CHECKER */
+        .verified-checker {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 163, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .verified-checker h3 {
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .checker-result {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .checker-result.verified {
+            background: rgba(0, 255, 163, 0.2);
+            color: #00ff99;
+            border: 1px solid var(--accent);
+        }
+
+        .checker-result.not-verified {
+            background: rgba(255, 60, 60, 0.2);
+            color: #ff6b6b;
+            border: 1px solid #ff3c3c;
+        }
+
+        /* COUNTDOWN TIMER */
+        .countdown-section {
+            background: rgba(255, 170, 0, 0.05);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffaa00;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* COMPLETION BANNER */
+        .completion-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            animation: bannerIn 0.5s ease;
+        }
+
+        .completion-banner.active {
+            display: flex;
+        }
+
+        @keyframes bannerIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .completion-banner-content {
+            text-align: center;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .completion-banner h2 {
+            font-size: 32px;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .completion-banner p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .banner-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .banner-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .banner-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* FOOTER */
+        .footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .footer-icon {
+            position: relative;
+            display: inline-block;
+        }
+
+        .admin-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            background: #ff3c3c;
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+            display: none;
+            animation: badgePulse 1s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .admin-badge.active {
+            display: block;
+        }
+
+        /* ADMIN PANEL */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            z-index: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-overlay.active {
+            display: block;
+        }
+
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background: var(--bg);
+            border-left: 1px solid rgba(0, 255, 163, 0.3);
+            overflow-y: auto;
+            z-index: 501;
+            transition: right 0.4s ease;
+        }
+
+        .admin-panel.active {
+            right: 0;
+        }
+
+        .admin-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 163, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 502;
+        }
+
+        .admin-header h2 {
+            font-size: 18px;
+            color: var(--accent);
+        }
+
+        .admin-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 255, 163, 0.2);
+        }
+
+        .admin-section h3 {
+            color: var(--accent);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: 0.4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* CONTACT LIST */
+        .contact-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 163, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .contact-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 255, 163, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .contact-phone {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .contact-delete {
+            background: #ff3c3c;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-delete:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 60, 60, 0.5);
+        }
+
+        /* COLOR SWATCHES */
+        .color-swatches {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .swatch {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .swatch:hover {
+            transform: scale(1.05);
+        }
+
+        .swatch.selected {
+            border-color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        /* OVERLAY */
+        .verified-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .verified-overlay.active {
+            display: flex;
+        }
+
+        .verified-content {
+            text-align: center;
+            animation: verifyPulse 0.6s ease;
+        }
+
+        @keyframes verifyPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .verified-overlay h2 {
+            font-size: 36px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 255, 163, 0.5);
+        }
+
+        .slot-machine {
+            font-size: 48px;
+            animation: spin 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes spin {
+            0% { transform: rotateY(0deg) scale(0.5); }
+            50% { transform: rotateY(180deg) scale(1.2); }
+            100% { transform: rotateY(360deg) scale(1); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            pointer-events: none;
+        }
+
+        /* AUDIO */
+        audio {
+            display: none;
+        }
+
+        .sound-hint {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 163, 0.3);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text);
+            cursor: pointer;
+            animation: float 2s ease-in-out infinite;
+            z-index: 50;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 430px) {
+            .admin-panel {
+                max-width: 100%;
+            }
+
+            .main-container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .verified-overlay h2 {
+                font-size: 28px;
+            }
+
+            .contact-list {
+                max-height: 300px;
+            }
+
+            .color-swatches {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* PASSWORD INPUT */
+        .password-group {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+            width: auto;
+            font-size: 14px;
+            padding: 5px;
+        }
+
+        .password-input {
+            padding-right: 40px !important;
+        }
+
+        /* SEARCH INPUT */
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            padding-left: 35px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* SLOT MACHINE PICKER */
+        .drum-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .drum-value {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 255, 163, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            text-align: center;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .drum-btn {
+            padding: 10px 12px;
+            font-size: 12px;
+        }
+
+        /* INPUT SLIDER */
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(0, 255, 163, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 163, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 255, 163, 0.5);
+        }
+
+        /* DATETIME INPUT */
+        input[type="datetime-local"] {
+            padding: 12px;
+        }
+
+        /* RADIO SELECTOR */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+            margin: 0;
+        }
+
+        .radio-label {
+            flex: 1;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* ERROR MESSAGE */
+        .error-message {
+            background: rgba(255, 60, 60, 0.2);
+            color: #ff6b6b;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        /* FILE INPUT */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: rgba(0, 255, 163, 0.1);
+            border: 2px dashed var(--accent);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .file-input-label:hover {
+            background: rgba(0, 255, 163, 0.2);
+        }
+
+        .file-input-label.dragover {
+            background: rgba(0, 255, 163, 0.3);
+            border-color: #00ffff;
+        }
+
+        /* STATUS PENDING LIST */
+        .pending-list {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .pending-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 255, 163, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .pending-item:last-child {
+            border-bottom: none;
+        }
+
+        .pending-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-approve {
+            background: #00ff99;
+            color: #000;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-reject {
+            background: #ff3c3c;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* ANALYTICS CHART */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card {
+            background: rgba(0, 255, 163, 0.1);
+            border: 1px solid rgba(0, 255, 163, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* BROADCAST MESSAGE */
+        .broadcast-section {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 163, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .broadcast-section textarea {
+            height: 80px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+
+        .copy-button {
+            background: rgba(0, 255, 163, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        /* HIDDEN CLASS */
+        .hidden {
+            display: none !important;
+        }
+
+        /* LOADING SPINNER */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 255, 163, 0.2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- AUDIO ELEMENT -->
+    <audio id="backgroundAudio" loop></audio>
+
+    <!-- SOUND HINT -->
+    <div class="sound-hint" id="soundHint">🔊 Tap to activate sound</div>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-container">
+            <img id="siteLogo" class="logo" src="" alt="Azgad Roy Logo">
+        </div>
+        <h1>Azgad Roy</h1>
+        <p>Join the exclusive circle</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="contact">Contact</button>
+            <button class="tab-btn" data-tab="verified">Verified?</button>
+            <button class="tab-btn" data-tab="members">Members</button>
+        </div>
+
+        <!-- TAB: CONTACT -->
+        <div class="tab-content active" id="contact-tab">
+            <!-- COUNTDOWN TIMER -->
+            <div class="countdown-section" id="countdownSection" style="display:none;">
+                <p style="font-size: 12px; color: #ffaa00; margin-bottom: 8px;">Group closes in:</p>
+                <div class="countdown-timer" id="countdownTimer">00:00:00</div>
+            </div>
+
+            <!-- PROGRESS BAR -->
+            <div style="margin-bottom: 20px;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+                <div class="progress-text" id="progressText">0 / 100 contacts</div>
+            </div>
+
+            <!-- VERIFIED MODE - INSTRUCTIONS -->
+            <div class="verified-mode-section" id="verifiedModeInstructions" style="display:none;">
+                <h3>Complete Verification to Join</h3>
+                
+                <!-- VERIFICATION TYPE SELECTOR -->
+                <div id="verificationTypeContainer" style="margin-bottom: 20px;">
+                    <div class="radio-group" id="verificationTypeRadios"></div>
+                </div>
+
+                <div id="shareInstructionsContainer"></div>
+
+                <div id="trackingCodeContainer" style="display:none;">
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Your unique tracking code:</p>
+                    <div class="tracking-code-box">
+                        <div class="tracking-code" id="visitorTrackingCode">ABC123</div>
+                        <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">Include this code in your group message</p>
+                    </div>
+                </div>
+
+                <button id="shareConfirmBtn" style="width: 100%; margin-top: 15px; display:none;">✓ I Have Shared</button>
+            </div>
+
+            <!-- CONTACT FORM -->
+            <div class="form-section" id="contactForm">
+                <h2>Your Details</h2>
+
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <div class="country-selector">
+                        <select id="countryCode">
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+233" selected>🇬🇭 +233</option>
+                            <option value="+234">🇳🇬 +234</option>
+                            <option value="+254">🇰🇪 +254</option>
+                            <option value="+27">🇿🇦 +27</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+39">🇮🇹 +39</option>
+                            <option value="+34">🇪🇸 +34</option>
+                            <option value="+49">🇩🇪 +49</option>
+                        </select>
+                        <input type="tel" id="phoneNumber" placeholder="Phone number" required>
+                    </div>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+
+                <button id="submitBtn" style="width: 100%;">Join the Circle</button>
+            </div>
+        </div>
+
+        <!-- TAB: VERIFIED CHECKER -->
+        <div class="tab-content" id="verified-tab">
+            <div class="verified-checker">
+                <h3>✓ Are You Verified?</h3>
+                <input type="tel" id="checkerPhone" placeholder="Enter your phone number">
+                <button id="checkBtn" style="width: 100%; margin-top: 10px;">Check Status</button>
+                <div class="checker-result" id="checkerResult" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- TAB: MEMBERS -->
+        <div class="tab-content" id="members-tab">
+            <div class="form-section">
+                <h2>Recent Joiners</h2>
+                <div class="member-wall" id="memberWall"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVITY FEED -->
+    <div class="activity-feed" id="activityFeed"></div>
+
+    <!-- VERIFIED OVERLAY -->
+    <div class="verified-overlay" id="verifiedOverlay">
+        <div class="verified-content">
+            <div class="slot-machine" id="slotMachine">✨</div>
+            <h2 id="verifiedText">You Have Been Verified</h2>
+        </div>
+    </div>
+
+    <!-- COMPLETION BANNER -->
+    <div class="completion-banner" id="completionBanner">
+        <button class="banner-close" id="bannerClose">×</button>
+        <div class="completion-banner-content">
+            <h2>🫠 Goal Reached!</h2>
+            <p>Download your VCF / CSV now</p>
+        </div>
+        <div class="banner-buttons">
+            <button id="bannerDownloadVcf" style="background: var(--accent); color: #000;">📥 Download VCF</button>
+            <button id="bannerDownloadCsv" style="background: var(--accent); color: #000;">📊 Download CSV</button>
+            <button id="bannerSendGroup" style="background: rgba(0, 255, 163, 0.2); color: var(--accent); border: 1px solid var(--accent);">💬 Send to Group</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 10px;">© 2024 Azgad Roy. All rights reserved.</p>
+        <div class="footer-icon">
+            <i class="fas fa-cog" id="adminToggle" style="cursor: pointer; font-size: 20px; color: var(--accent);"></i>
+            <div class="admin-badge" id="adminBadge"></div>
+        </div>
+    </div>
+
+    <!-- ADMIN OVERLAY & PANEL -->
+    <div class="admin-overlay" id="adminOverlay"></div>
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>Admin Panel</h2>
+            <button class="admin-close" id="adminClose">×</button>
+        </div>
+
+        <div class="admin-content">
+            <!-- LOGIN SECTION -->
+            <div id="adminLoginSection" class="admin-section">
+                <h3>🔐 Admin Access</h3>
+                <div class="form-group">
+                    <label for="adminPassword">Enter Admin Password</label>
+                    <div class="password-group">
+                        <input type="password" id="adminPassword" class="password-input" placeholder="••••••••" required>
+                        <button class="password-toggle" id="passwordToggle">👁</button>
+                    </div>
+                </div>
+                <button id="adminLoginBtn" style="width: 100%;">Login</button>
+            </div>
+
+            <!-- AUTHENTICATED ADMIN PANEL -->
+            <div id="adminAuthenticatedSection" style="display:none;">
+                <!-- QUICK STATUS -->
+                <div class="admin-section">
+                    <h3>📊 Quick Status</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div style="background: rgba(0, 255, 163, 0.1); padding: 12px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 20px; font-weight: 700; color: var(--accent);" id="adminContactCount">0</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">Contacts</div>
+                        </div>
+                        <div style="background: rgba(0, 255, 163, 0.1); padding: 12px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 20px; font-weight: 700; color: var(--accent);" id="adminPercentage">0%</div>
+                            <div style="font-size: 11px; color: var(--text-secondary);">Filled</div>
+                        </div>
+                    </div>
+                    <button id="adminMarkComplete" style="width: 100%; background: #ff3c3c; margin-bottom: 10px;">Mark as Complete</button>
+                    <button id="adminLogoutBtn" style="width: 100%; background: rgba(255, 255, 255, 0.1); color: var(--text);">Logout</button>
+                </div>
+
+                <!-- CONTACT MANAGEMENT -->
+                <div class="admin-section">
+                    <h3>👥 Contact Management</h3>
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="contactSearchInput" placeholder="Search by name or phone">
+                    </div>
+                    <button id="downloadVcfBtn" style="width: 100%; margin-bottom: 10px;">📥 Download VCF</button>
+                    <button id="downloadCsvBtn" style="width: 100%; margin-bottom: 10px;">📊 Download CSV</button>
+                    <button id="bulkDeleteBtn" style="width: 100%; background: #ff3c3c; margin-bottom: 10px;">🗑️ Delete Selected</button>
+                    <div class="contact-list" id="adminContactList"></div>
+                </div>
+
+                <!-- SITE SETTINGS -->
+                <div class="admin-section">
+                    <h3>⚙️ Site Settings</h3>
+
+                    <label style="color: var(--text-secondary); font-size: 12px; font-weight: 600; margin-bottom: 10px; display: block;">Active Mode</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="modeFreeFree" name="activeMode" value="free" checked>
+                            <label class="radio-label" for="modeFreeFree">Free Mode (Open Verification)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="modeVerified" name="activeMode" value="verified">
+                            <label class="radio-label" for="modeVerified">Verified Mode (Share-to-Join)</label>
+                        </div>
+                    </div>
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">Contact Limit</label>
+                    <div class="drum-picker">
+                        <button class="drum-btn" id="limitDecreaseBtn">−</button>
+                        <input type="range" id="limitSlider" min="1" max="50000" value="100" style="flex: 1;">
+                        <button class="drum-btn" id="limitIncreaseBtn">+</button>
+                    </div>
+                    <div class="drum-value" id="limitValue">100</div>
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">WhatsApp Group Link</label>
+                    <input type="url" id="whatsappLink" placeholder="https://chat.whatsapp.com/...">
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">Countdown to Closure</label>
+                    <input type="datetime-local" id="closureDateTime">
+                    <button id="setClosure" style="width: 100%; margin-top: 8px;">Set Countdown</button>
+
+                    <label style="margin-top: 15px; margin-bottom: 10px; display: block; color: var(--text-secondary); font-weight: 600; font-size: 12px;">Country Filter</label>
+                    <div class="toggle-switch">
+                        <span>Ghana Only (+233)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="ghanaOnlyToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- VERIFIED MODE SETTINGS -->
+                <div class="admin-section" id="verifiedModeSettings" style="display:none;">
+                    <h3>✓ Verified Mode Settings</h3>
+
+                    <label style="color: var(--text-secondary); font-size: 12px; font-weight: 600; margin-bottom: 10px; display: block;">Verification Type</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="verificationType" value="group" checked>
+                            <label class="radio-label">Group Shares Only</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="verificationType" value="status">
+                            <label class="radio-label">Status Share Only</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="verificationType" value="both">
+                            <label class="radio-label">Both (Group + Status)</label>
+                        </div>
+                    </div>
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">Required Group Shares</label>
+                    <input type="number" id="requiredGroupShares" min="1" value="3">
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">WhatsApp Share Link</label>
+                    <input type="url" id="shareLink" placeholder="https://chat.whatsapp.com/...">
+
+                    <label style="margin-top: 15px; margin-bottom: 10px; display: block; color: var(--text-secondary); font-weight: 600; font-size: 12px;">WhatsApp Status Tracking</label>
+                    <div class="toggle-switch">
+                        <span>Require Status Share</span>
+                        <label class="switch">
+                            <input type="checkbox" id="requireStatusToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">Status Share Instructions</label>
+                    <textarea id="statusInstructions" placeholder="Explain how to share with tracking code...">Add this code to your Status caption: {CODE}</textarea>
+
+                    <h3 style="margin-top: 20px; color: var(--accent);">Pending Status Approvals</h3>
+                    <div class="pending-list" id="pendingStatusList"></div>
+                </div>
+
+                <!-- FEATURE TOGGLES -->
+                <div class="admin-section">
+                    <h3>🎛️ Feature Toggles</h3>
+
+                    <div class="toggle-switch">
+                        <span>Background Song</span>
+                        <label class="switch">
+                            <input type="checkbox" id="songEnabledToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>You Have Been Verified Overlay</span>
+                        <label class="switch">
+                            <input type="checkbox" id="overlayToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Confetti Burst</span>
+                        <label class="switch">
+                            <input type="checkbox" id="confettiToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Slot-Machine Animation</span>
+                        <label class="switch">
+                            <input type="checkbox" id="slotToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Activity Feed Ticker</span>
+                        <label class="switch">
+                            <input type="checkbox" id="feedToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Live Member Wall</span>
+                        <label class="switch">
+                            <input type="checkbox" id="memberWallToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Are You Verified? Checker</span>
+                        <label class="switch">
+                            <input type="checkbox" id="checkerToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Contact Editing (24h)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="editingToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Countdown Timer</span>
+                        <label class="switch">
+                            <input type="checkbox" id="countdownToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Referral Tracking</span>
+                        <label class="switch">
+                            <input type="checkbox" id="referralToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Duplicate Detection</span>
+                        <label class="switch">
+                            <input type="checkbox" id="duplicateToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Completion Alert Sound</span>
+                        <label class="switch">
+                            <input type="checkbox" id="completionSoundToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Analytics Dashboard</span>
+                        <label class="switch">
+                            <input type="checkbox" id="analyticsToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Broadcast Link Generator</span>
+                        <label class="switch">
+                            <input type="checkbox" id="broadcastToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <span>Voice Announcement ON / OFF</span>
+                        <label class="switch">
+                            <input type="checkbox" id="voiceToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- AUDIO & VOICE -->
+                <div class="admin-section">
+                    <h3>🎵 Audio & Voice</h3>
+
+                    <label>Upload Background Song</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="songUpload" accept="audio/*">
+                        <label class="file-input-label" for="songUpload">📁 Choose Audio File</label>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;" id="songUploadStatus"></div>
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">Verified Voice Type</label>
+                    <select id="voiceSelect">
+                        <option value="default">Default (System Voice)</option>
+                    </select>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">Or upload a custom audio clip:</p>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="voiceUpload" accept="audio/*">
+                        <label class="file-input-label" for="voiceUpload">📁 Upload Voice Clip</label>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;" id="voiceUploadStatus"></div>
+                </div>
+
+                <!-- CUSTOMIZATION -->
+                <div class="admin-section">
+                    <h3>🎨 Customization</h3>
+
+                    <label style="margin-bottom: 12px; display: block;">Accent Colour</label>
+                    <div class="color-swatches" id="accentSwatches"></div>
+
+                    <label style="margin-top: 15px; margin-bottom: 12px; display: block;">Logo Glow Colour</label>
+                    <div class="color-swatches" id="glowSwatches"></div>
+
+                    <label style="margin-top: 15px; margin-bottom: 12px; display: block;">Font Style</label>
+                    <select id="fontSelect">
+                        <option value="Syne">Syne</option>
+                        <option value="Orbitron">Orbitron</option>
+                        <option value="Rajdhani">Rajdhani</option>
+                        <option value="Exo+2">Exo 2</option>
+                        <option value="Audiowide">Audiowide</option>
+                        <option value="Russo+One">Russo One</option>
+                        <option value="Oxanium">Oxanium</option>
+                    </select>
+
+                    <label style="margin-top: 15px; margin-bottom: 8px;">Upload Custom Logo</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="logoUpload" accept="image/*">
+                        <label class="file-input-label" for="logoUpload">📁 Choose Logo Image</label>
+                    </div>
+                </div>
+
+                <!-- ANALYTICS -->
+                <div class="admin-section" id="analyticsSection" style="display:none;">
+                    <h3>📈 Analytics</h3>
+                    <div class="analytics-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="statTotal">0</div>
+                            <div class="stat-label">Total Signups</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statPeakHour">0</div>
+                            <div class="stat-label">Peak Hour</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="signupChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- BROADCAST -->
+                <div class="admin-section" id="broadcastSection" style="display:none;">
+                    <h3>💬 Broadcast Message</h3>
+                    <div class="broadcast-section">
+                        <label>Custom Completion Message</label>
+                        <textarea id="broadcastMessage">🫠 VCF list is complete! Download and upload the file now.</textarea>
+                        <button id="generateBroadcastBtn" style="width: 100%;">Generate Link</button>
+                        <input type="text" id="broadcastLink" readonly style="margin-top: 10px;">
+                        <button class="copy-button" id="copyBroadcastBtn" style="width: 100%; margin-top: 8px;">📋 Copy Link</button>
+                    </div>
+                </div>
+
+                <!-- PASSWORD CHANGE -->
+                <div class="admin-section">
+                    <h3>🔐 Change Admin Password</h3>
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <div class="password-group">
+                            <input type="password" id="currentPassword" class="password-input" placeholder="••••••••">
+                            <button class="password-toggle">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <div class="password-group">
+                            <input type="password" id="newPassword" class="password-input" placeholder="••••••••">
+                            <button class="password-toggle">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="password-group">
+                            <input type="password" id="confirmPassword" class="password-input" placeholder="••••••••">
+                            <button class="password-toggle">👁</button>
+                        </div>
+                    </div>
+                    <button id="changePasswordBtn" style="width: 100%;">Change Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, deleteDoc, doc, updateDoc, serverTimestamp, getDoc, writeBatch } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js';
+
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtGzkCyUU1U6cuUKnbI3f67JXagiv4Juk",
+            authDomain: "azgadroy-vcf.firebaseapp.com",
+            projectId: "azgadroy-vcf",
+            storageBucket: "azgadroy-vcf.firebasestorage.app",
+            messagingSenderId: "929523641332",
+            appId: "1:929523641332:web:fc02ebeb1af838458327a1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // DEFAULT LOGO (Base64 embedded)
+        const LOGO_BASE64 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBmZmEzO3N0b3Atb3BhY2l0eToxIiAvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzAwY2M4ODtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk1IiBmaWxsPSJ1cmwoI2dyYWQpIiBvcGFjaXR5PSIwLjEiIHN0cm9rZT0idXJsKCNncmFkKSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iNjAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMwMGZmYTMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BUjwvdGV4dD48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjEwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBmZmEzIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1kYXNoYXJyYXk9IjUsNSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+';
+
+        // GLOBAL STATE
+        let currentUser = null;
+        let adminAuthenticated = false;
+        let settings = {};
+        let allContacts = [];
+        let signupChart = null;
+        let verificationCode = null;
+        let visitorId = null;
+        let shareProgress = 0;
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        async function init() {
+            // Set default logo
+            document.getElementById('siteLogo').src = localStorage.getItem('CUSTOM_LOGO') || LOGO_BASE64;
+
+            // Load settings from Firestore
+            await loadSettings();
+
+            // Apply saved customizations
+            applyCustomizations();
+
+            // Setup event listeners
+            setupEventListeners();
+
+            // Request notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+
+            // Start listening to contacts
+            listenToContacts();
+
+            // Check if form should be disabled
+            updateFormState();
+
+            // Handle referral links
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('ref')) {
+                sessionStorage.setItem('referrer', params.get('ref'));
+            }
+
+            // Setup audio
+            setupAudio();
+
+            // Generate visitor ID for tracking
+            visitorId = generateUUID();
+            sessionStorage.setItem('visitorId', visitorId);
+
+            // Check for edit token
+            const editToken = sessionStorage.getItem('editToken');
+            if (editToken && localStorage.getItem('userPhone')) {
+                showEditLink();
+            }
+        }
+
+        // ============================================
+        // SETTINGS MANAGEMENT
+        // ============================================
+
+        async function loadSettings() {
+            try {
+                const settingsDoc = await getDoc(doc(db, 'settings', 'admin'));
+                if (settingsDoc.exists()) {
+                    settings = settingsDoc.data();
+                } else {
+                    // Create default settings
+                    settings = {
+                        password: 'azgad2024',
+                        whatsappLink: 'https://chat.whatsapp.com/FpV1fcA9mXF7DJHVL3tmgP?mode=gi_t',
+                        contactLimit: 100,
+                        countryFilter: false,
+                        activeMode: 'free',
+                        songURL: null,
+                        songEnabled: true,
+                        voiceConfig: 'default',
+                        overlayEnabled: true,
+                        confettiEnabled: true,
+                        slotEnabled: true,
+                        feedEnabled: true,
+                        memberWallEnabled: true,
+                        checkerEnabled: true,
+                        editingEnabled: true,
+                        countdownEnabled: false,
+                        countdownTime: null,
+                        referralEnabled: false,
+                        duplicateDetection: true,
+                        completionSoundEnabled: true,
+                        analyticsEnabled: false,
+                        broadcastEnabled: false,
+                        voiceEnabled: true,
+                        voiceName: 'default',
+                        verifiedVoiceURL: null,
+                        verificationType: 'group',
+                        requiredGroupShares: 3,
+                        shareLink: settings.whatsappLink,
+                        requireStatus: false,
+                        statusInstructions: 'Add this code to your Status caption: {CODE}',
+                        broadcastMessage: '🫠 VCF list is complete! Download and upload the file now.'
+                    };
+                    await updateDoc(doc(db, 'settings', 'admin'), settings);
+                }
+            } catch (e) {
+                console.error('Error loading settings:', e);
+            }
+        }
+
+        async function updateSettings(updates) {
+            try {
+                settings = { ...settings, ...updates };
+                await updateDoc(doc(db, 'settings', 'admin'), updates);
+                applyCustomizations();
+                updateFormState();
+            } catch (e) {
+                console.error('Error updating settings:', e);
+            }
+        }
+
+        function applyCustomizations() {
+            const accent = localStorage.getItem('accentColor') || '#00ffa3';
+            const glow = localStorage.getItem('glowColor') || '#00ffa3';
+            const font = localStorage.getItem('fontFamily') || 'Syne';
+
+            document.documentElement.style.setProperty('--accent', accent);
+            document.documentElement.style.setProperty('--glow', glow);
+            document.documentElement.style.setProperty('--font-family', `'${font}', sans-serif`);
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab + '-tab').classList.add('active');
+                });
+            });
+
+            // Contact form submission
+            document.getElementById('submitBtn').addEventListener('click', handleFormSubmit);
+
+            // Verified checker
+            document.getElementById('checkBtn').addEventListener('click', handleVerifiedCheck);
+
+            // Admin panel
+            document.getElementById('adminToggle').addEventListener('click', openAdminPanel);
+            document.getElementById('adminClose').addEventListener('click', closeAdminPanel);
+            document.getElementById('adminOverlay').addEventListener('click', closeAdminPanel);
+            document.getElementById('adminLoginBtn').addEventListener('click', handleAdminLogin);
+            document.getElementById('adminLogoutBtn').addEventListener('click', handleAdminLogout);
+            document.getElementById('passwordToggle').addEventListener('click', togglePasswordVisibility);
+            document.getElementById('changePasswordBtn').addEventListener('click', handlePasswordChange);
+
+            // Feature toggles
+            setupFeatureToggles();
+
+            // Contact management
+            document.getElementById('downloadVcfBtn').addEventListener('click', downloadVCF);
+            document.getElementById('downloadCsvBtn').addEventListener('click', downloadCSV);
+            document.getElementById('contactSearchInput').addEventListener('input', filterContacts);
+            document.getElementById('bulkDeleteBtn').addEventListener('click', bulkDeleteContacts);
+
+            // Site settings
+            document.getElementById('limitSlider').addEventListener('input', handleLimitChange);
+            document.getElementById('limitDecreaseBtn').addEventListener('click', () => {
+                document.getElementById('limitSlider').value = Math.max(1, parseInt(document.getElementById('limitSlider').value) - 1);
+                handleLimitChange();
+            });
+            document.getElementById('limitIncreaseBtn').addEventListener('click', () => {
+                document.getElementById('limitSlider').value = Math.min(50000, parseInt(document.getElementById('limitSlider').value) + 1);
+                handleLimitChange();
+            });
+            document.getElementById('whatsappLink').addEventListener('change', () => {
+                updateSettings({ whatsappLink: document.getElementById('whatsappLink').value });
+            });
+            document.getElementById('setClosure').addEventListener('click', handleSetClosure);
+            document.getElementById('ghanaOnlyToggle').addEventListener('change', () => {
+                updateSettings({ countryFilter: document.getElementById('ghanaOnlyToggle').checked });
+            });
+
+            // Verified mode
+            document.querySelectorAll('input[name="activeMode"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    updateSettings({ activeMode: radio.value });
+                    updateFormState();
+                });
+            });
+
+            document.querySelectorAll('input[name="verificationType"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    updateSettings({ verificationType: radio.value });
+                });
+            });
+
+            document.getElementById('requiredGroupShares').addEventListener('change', () => {
+                updateSettings({ requiredGroupShares: parseInt(document.getElementById('requiredGroupShares').value) });
+            });
+
+            document.getElementById('shareLink').addEventListener('change', () => {
+                updateSettings({ shareLink: document.getElementById('shareLink').value });
+            });
+
+            document.getElementById('requireStatusToggle').addEventListener('change', () => {
+                updateSettings({ requireStatus: document.getElementById('requireStatusToggle').checked });
+            });
+
+            document.getElementById('statusInstructions').addEventListener('change', () => {
+                updateSettings({ statusInstructions: document.getElementById('statusInstructions').value });
+            });
+
+            // Audio uploads
+            document.getElementById('songUpload').addEventListener('change', handleSongUpload);
+            document.getElementById('voiceUpload').addEventListener('change', handleVoiceUpload);
+            document.getElementById('voiceSelect').addEventListener('change', handleVoiceChange);
+
+            // Customization
+            setupColorSwatches();
+            document.getElementById('fontSelect').addEventListener('change', handleFontChange);
+            document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
+
+            // Mode specific
+            document.getElementById('modeFreeFree').addEventListener('change', () => updateSettings({ activeMode: 'free' }));
+            document.getElementById('modeVerified').addEventListener('change', () => updateSettings({ activeMode: 'verified' }));
+
+            // Completion actions
+            document.getElementById('bannerClose').addEventListener('click', () => {
+                document.getElementById('completionBanner').classList.remove('active');
+                localStorage.setItem('completionBannerDismissed', 'true');
+            });
+            document.getElementById('bannerDownloadVcf').addEventListener('click', downloadVCF);
+            document.getElementById('bannerDownloadCsv').addEventListener('click', downloadCSV);
+            document.getElementById('bannerSendGroup').addEventListener('click', openBroadcastGroup);
+
+            // Mark complete
+            document.getElementById('adminMarkComplete').addEventListener('click', handleMarkComplete);
+
+            // Broadcast
+            if (document.getElementById('generateBroadcastBtn')) {
+                document.getElementById('generateBroadcastBtn').addEventListener('click', generateBroadcastLink);
+                document.getElementById('copyBroadcastBtn').addEventListener('click', copyBroadcastLink);
+            }
+
+            // Sound hint
+            document.getElementById('soundHint').addEventListener('click', startAudio);
+
+            // Share confirmation
+            if (document.getElementById('shareConfirmBtn')) {
+                document.getElementById('shareConfirmBtn').addEventListener('click', handleShareConfirmation);
+            }
+        }
+
+        function setupFeatureToggles() {
+            const toggles = {
+                'songEnabledToggle': 'songEnabled',
+                'overlayToggle': 'overlayEnabled',
+                'confettiToggle': 'confettiEnabled',
+                'slotToggle': 'slotEnabled',
+                'feedToggle': 'feedEnabled',
+                'memberWallToggle': 'memberWallEnabled',
+                'checkerToggle': 'checkerEnabled',
+                'editingToggle': 'editingEnabled',
+                'countdownToggle': 'countdownEnabled',
+                'referralToggle': 'referralEnabled',
+                'duplicateToggle': 'duplicateDetection',
+                'completionSoundToggle': 'completionSoundEnabled',
+                'analyticsToggle': 'analyticsEnabled',
+                'broadcastToggle': 'broadcastEnabled',
+                'voiceToggle': 'voiceEnabled'
+            };
+
+            Object.entries(toggles).forEach(([elementId, settingKey]) => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.addEventListener('change', () => {
+                        const value = element.checked;
+                        updateSettings({ [settingKey]: value });
+                        updateVisibleElements();
+                    });
+                }
+            });
+        }
+
+        function updateVisibleElements() {
+            document.getElementById('memberWall').parentElement.parentElement.style.display = settings.memberWallEnabled ? 'block' : 'none';
+            document.getElementById('verifiedOverlay').style.display = settings.overlayEnabled ? 'none' : 'none';
+            document.getElementById('activityFeed').style.display = settings.feedEnabled ? 'block' : 'none';
+            const verifiedTab = document.querySelector('[data-tab="verified"]');
+            if (verifiedTab) verifiedTab.style.display = settings.checkerEnabled ? 'block' : 'none';
+            document.getElementById('analyticsSection').style.display = settings.analyticsEnabled ? 'block' : 'none';
+            document.getElementById('broadcastSection').style.display = settings.broadcastEnabled ? 'block' : 'none';
+        }
+
+        // ============================================
+        // FORM HANDLING
+        // ============================================
+
+        async function handleFormSubmit() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const countryCode = document.getElementById('countryCode').value;
+            const phoneError = document.getElementById('phoneError');
+
+            phoneError.classList.remove('active');
+
+            if (!fullName || !phoneNumber) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Ghana filter
+            if (settings.countryFilter && countryCode !== '+233') {
+                phoneError.textContent = 'Participant Is Out Of Contact Range';
+                phoneError.classList.add('active');
+                return;
+            }
+
+            const fullPhone = countryCode + phoneNumber;
+
+            // Duplicate check
+            if (settings.duplicateDetection) {
+                const existing = allContacts.find(c => c.phone === fullPhone);
+                if (existing) {
+                    alert('This phone number is already registered');
+                    return;
+                }
+            }
+
+            // Verified mode check
+            if (settings.activeMode === 'verified') {
+                if (!sessionStorage.getItem('shareVerified')) {
+                    alert('Please complete the sharing requirement first');
+                    return;
+                }
+            }
+
+            // Rate limiting (3 submissions per 10 minutes from same IP)
+            const recentSubmissions = JSON.parse(localStorage.getItem('recentSubmissions') || '[]');
+            const tenMinutesAgo = Date.now() - 600000;
+            const filtered = recentSubmissions.filter(t => t > tenMinutesAgo);
+            if (filtered.length >= 3) {
+                alert('Too many submissions. Please wait a moment.');
+                return;
+            }
+
+            try {
+                // Add contact to Firestore
+                const contactData = {
+                    name: fullName,
+                    phone: fullPhone,
+                    country: countryCode,
+                    timestamp: serverTimestamp(),
+                    shareVerified: settings.activeMode === 'free' ? true : true,
+                    referrer: sessionStorage.getItem('referrer') || null,
+                    visitorId: visitorId
+                };
+
+                const docRef = await addDoc(collection(db, 'contacts'), contactData);
+
+                // Create edit token
+                const editToken = generateEditToken();
+                await updateDoc(doc(db, 'contacts', docRef.id), {
+                    editToken: editToken,
+                    editTokenExpiry: new Date(Date.now() + 86400000) // 24 hours
+                });
+
+                // Store in session
+                sessionStorage.setItem('editToken', editToken);
+                sessionStorage.setItem('userPhone', fullPhone);
+                localStorage.setItem('userPhone', fullPhone);
+
+                // Rate limit tracking
+                filtered.push(Date.now());
+                localStorage.setItem('recentSubmissions', JSON.stringify(filtered));
+
+                // Show verification overlay
+                if (settings.overlayEnabled) {
+                    showVerificationOverlay();
+                }
+
+                // Play voice
+                if (settings.voiceEnabled) {
+                    await playVerificationVoice();
+                }
+
+                // Play completion sound when limit reached
+                checkCompletion();
+
+                // Clear form
+                document.getElementById('fullName').value = '';
+                document.getElementById('phoneNumber').value = '';
+
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    const whatsappLink = settings.whatsappLink || 'https://chat.whatsapp.com/FpV1fcA9mXF7DJHVL3tmgP?mode=gi_t';
+                    window.location.href = whatsappLink;
+                }, 3000);
+
+            } catch (e) {
+                console.error('Error submitting contact:', e);
+                alert('Error submitting contact. Please try again.');
+            }
+        }
+
+        function handleVerifiedCheck() {
+            const phone = document.getElementById('checkerPhone').value.trim();
+            const result = document.getElementById('checkerResult');
+
+            if (!phone) {
+                result.textContent = 'Enter your phone number';
+                result.classList.add('active');
+                return;
+            }
+
+            const contact = allContacts.find(c => c.phone.includes(phone));
+            result.classList.add('active');
+
+            if (contact) {
+                result.classList.remove('not-verified');
+                result.classList.add('verified');
+                result.innerHTML = `✓ You're verified!<br><small style="font-size: 11px; margin-top: 5px; display: block;">${contact.name} • ${contact.phone}</small>`;
+            } else {
+                result.classList.remove('verified');
+                result.classList.add('not-verified');
+                result.textContent = '✗ Not found. Share the link and try again!';
+            }
+        }
+
+        // ============================================
+        // CONTACTS MANAGEMENT
+        // ============================================
+
+        function listenToContacts() {
+            onSnapshot(collection(db, 'contacts'), (snapshot) => {
+                allContacts = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                updateContactsDisplay();
+                updateProgressBar();
+                updateAnalytics();
+                checkCompletion();
+            });
+        }
+
+        function updateContactsDisplay() {
+            // Member wall
+            if (settings.memberWallEnabled) {
+                const recent = allContacts.slice(0, 6);
+                const wall = document.getElementById('memberWall');
+                wall.innerHTML = recent.map(c => {
+                    const firstName = c.name.split(' ')[0];
+                    return `<div class="member-bubble">${firstName}</div>`;
+                }).join('');
+            }
+
+            // Admin contact list
+            if (adminAuthenticated) {
+                refreshContactList();
+            }
+        }
+
+        function updateProgressBar() {
+            const limit = settings.contactLimit || 100;
+            const count = allContacts.length;
+            const percentage = (count / limit) * 100;
+
+            document.getElementById('progressFill').style.width = Math.min(percentage, 100) + '%';
+            document.getElementById('progressText').textContent = `${count} / ${limit} contacts`;
+            document.getElementById('adminContactCount').textContent = count;
+            document.getElementById('adminPercentage').textContent = Math.round(percentage) + '%';
+
+            // Disable form when limit reached
+            if (count >= limit) {
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').textContent = 'Sorry You Just Missed The Recent File, List completed';
+                document.getElementById('contactForm').style.opacity = '0.6';
+            }
+        }
+
+        function refreshContactList() {
+            const list = document.getElementById('adminContactList');
+            list.innerHTML = allContacts.map(contact => `
+                <div class="contact-item">
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.name}</div>
+                        <div class="contact-phone">${contact.phone}</div>
+                    </div>
+                    <button class="contact-delete" onclick="deleteContact('${contact.id}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        async function deleteContact(id) {
+            if (confirm('Delete this contact?')) {
+                try {
+                    await deleteDoc(doc(db, 'contacts', id));
+                } catch (e) {
+                    console.error('Error deleting contact:', e);
+                }
+            }
+        }
+
+        function filterContacts() {
+            const search = document.getElementById('contactSearchInput').value.toLowerCase();
+            const list = document.getElementById('adminContactList');
+            const filtered = allContacts.filter(c => 
+                c.name.toLowerCase().includes(search) || c.phone.includes(search)
+            );
+            list.innerHTML = filtered.map(contact => `
+                <div class="contact-item">
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.name}</div>
+                        <div class="contact-phone">${contact.phone}</div>
+                    </div>
+                    <button class="contact-delete" onclick="deleteContact('${contact.id}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        async function bulkDeleteContacts() {
+            if (allContacts.length === 0) return;
+            if (!confirm(`Delete all ${allContacts.length} contacts?`)) return;
+
+            try {
+                const batch = writeBatch(db);
+                allContacts.forEach(contact => {
+                    batch.delete(doc(db, 'contacts', contact.id));
+                });
+                await batch.commit();
+            } catch (e) {
+                console.error('Error bulk deleting:', e);
+            }
+        }
+
+        // ============================================
+        // VCF & CSV EXPORT
+        // ============================================
+
+        function downloadVCF() {
+            let vcf = '';
+            allContacts.forEach(contact => {
+                vcf += `BEGIN:VCARD\nVERSION:3.0\nFN:${contact.name}\nTEL:${contact.phone}\nEND:VCARD\n`;
+            });
+
+            const blob = new Blob([vcf], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts.vcf';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            localStorage.setItem('completionBannerDismissed', 'false');
+        }
+
+        function downloadCSV() {
+            let csv = 'Name,Phone,Country,Timestamp\n';
+            allContacts.forEach(contact => {
+                const timestamp = contact.timestamp ? new Date(contact.timestamp.toDate()).toISOString() : '';
+                csv += `"${contact.name}","${contact.phone}","${contact.country}","${timestamp}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            localStorage.setItem('completionBannerDismissed', 'false');
+        }
+
+        // ============================================
+        // ADMIN PANEL
+        // ============================================
+
+        function openAdminPanel() {
+            document.getElementById('adminOverlay').classList.add('active');
+            document.getElementById('adminPanel').classList.add('active');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminOverlay').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
+        }
+
+        async function handleAdminLogin() {
+            const password = document.getElementById('adminPassword').value;
+
+            try {
+                const settingsDoc = await getDoc(doc(db, 'settings', 'admin'));
+                const storedPassword = settingsDoc.data()?.password || 'azgad2024';
+
+                if (password === storedPassword) {
+                    adminAuthenticated = true;
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('adminAuthenticatedSection').style.display = 'block';
+                    document.getElementById('adminPassword').value = '';
+                    loadAdminPanel();
+                } else {
+                    alert('Incorrect password');
+                }
+            } catch (e) {
+                console.error('Error during login:', e);
+            }
+        }
+
+        function handleAdminLogout() {
+            adminAuthenticated = false;
+            document.getElementById('adminLoginSection').style.display = 'block';
+            document.getElementById('adminAuthenticatedSection').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            closeAdminPanel();
+        }
+
+        function loadAdminPanel() {
+            // Load current settings
+            document.getElementById('limitValue').textContent = settings.contactLimit || 100;
+            document.getElementById('limitSlider').value = settings.contactLimit || 100;
+            document.getElementById('whatsappLink').value = settings.whatsappLink || 'https://chat.whatsapp.com/FpV1fcA9mXF7DJHVL3tmgP?mode=gi_t';
+            document.getElementById('shareLink').value = settings.shareLink || settings.whatsappLink;
+            document.getElementById('requiredGroupShares').value = settings.requiredGroupShares || 3;
+            document.getElementById('statusInstructions').value = settings.statusInstructions || 'Add this code to your Status caption: {CODE}';
+            document.getElementById('ghanaOnlyToggle').checked = settings.countryFilter || false;
+
+            // Load toggles
+            document.getElementById('songEnabledToggle').checked = settings.songEnabled !== false;
+            document.getElementById('overlayToggle').checked = settings.overlayEnabled !== false;
+            document.getElementById('confettiToggle').checked = settings.confettiEnabled !== false;
+            document.getElementById('slotToggle').checked = settings.slotEnabled !== false;
+            document.getElementById('feedToggle').checked = settings.feedEnabled !== false;
+            document.getElementById('memberWallToggle').checked = settings.memberWallEnabled !== false;
+            document.getElementById('checkerToggle').checked = settings.checkerEnabled !== false;
+            document.getElementById('editingToggle').checked = settings.editingEnabled !== false;
+            document.getElementById('countdownToggle').checked = settings.countdownEnabled !== false;
+            document.getElementById('referralToggle').checked = settings.referralEnabled !== false;
+            document.getElementById('duplicateToggle').checked = settings.duplicateDetection !== false;
+            document.getElementById('completionSoundToggle').checked = settings.completionSoundEnabled !== false;
+            document.getElementById('analyticsToggle').checked = settings.analyticsEnabled !== false;
+            document.getElementById('broadcastToggle').checked = settings.broadcastEnabled !== false;
+            document.getElementById('voiceToggle').checked = settings.voiceEnabled !== false;
+
+            // Load mode
+            if (settings.activeMode === 'verified') {
+                document.getElementById('modeVerified').checked = true;
+                document.getElementById('verifiedModeSettings').style.display = 'block';
+            }
+
+            // Load verification type
+            document.querySelectorAll('input[name="verificationType"]').forEach(radio => {
+                radio.checked = radio.value === (settings.verificationType || 'group');
+            });
+
+            document.getElementById('requireStatusToggle').checked = settings.requireStatus || false;
+
+            // Populate voice dropdown
+            populateVoiceDropdown();
+
+            // Setup color swatches
+            setupColorSwatches();
+
+            refreshContactList();
+            updateVisibleElements();
+        }
+
+        function populateVoiceDropdown() {
+            const voiceSelect = document.getElementById('voiceSelect');
+            voiceSelect.innerHTML = '<option value="default">Default System Voice</option>';
+            
+            if ('speechSynthesis' in window) {
+                const voices = speechSynthesis.getVoices();
+                voices.forEach((voice, index) => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = voice.name + (voice.default ? ' (Default)' : '');
+                    voiceSelect.appendChild(option);
+                });
+                
+                // Set selected voice
+                if (settings.voiceName && settings.voiceName !== 'default') {
+                    voiceSelect.value = settings.voiceName;
+                }
+            }
+        }
+
+        function handleLimitChange() {
+            const value = parseInt(document.getElementById('limitSlider').value);
+            document.getElementById('limitValue').textContent = value;
+            updateSettings({ contactLimit: value });
+        }
+
+        async function handleSetClosure() {
+            const datetime = document.getElementById('closureDateTime').value;
+            if (!datetime) {
+                alert('Please select a date and time');
+                return;
+            }
+
+            const closureTime = new Date(datetime).getTime();
+            await updateSettings({ countdownTime: closureTime, countdownEnabled: true });
+            updateCountdownTimer();
+        }
+
+        // ============================================
+        // AUDIO HANDLING
+        // ============================================
+
+        function setupAudio() {
+            // Listen for song changes
+            onSnapshot(doc(db, 'settings', 'admin'), (doc) => {
+                const songURL = doc.data()?.songURL;
+                if (songURL && settings.songEnabled) {
+                    document.getElementById('backgroundAudio').src = songURL;
+                }
+            });
+        }
+
+        function startAudio() {
+            const audio = document.getElementById('backgroundAudio');
+            if (audio.src) {
+                audio.play().then(() => {
+                    document.getElementById('soundHint').style.display = 'none';
+                }).catch(e => console.log('Audio play failed:', e));
+            }
+        }
+
+        async function handleSongUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                document.getElementById('songUploadStatus').textContent = 'Uploading...';
+                const storageRef = ref(storage, 'songs/background');
+                await uploadBytes(storageRef, file);
+                const url = await getDownloadURL(storageRef);
+
+                await updateSettings({ songURL: url });
+                document.getElementById('backgroundAudio').src = url;
+                document.getElementById('songUploadStatus').textContent = '✓ Song uploaded successfully';
+                e.target.value = '';
+            } catch (e) {
+                console.error('Error uploading song:', e);
+                document.getElementById('songUploadStatus').textContent = '✗ Upload failed';
+            }
+        }
+
+        async function handleVoiceUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                document.getElementById('voiceUploadStatus').textContent = 'Uploading...';
+                const storageRef = ref(storage, 'voices/verified');
+                await uploadBytes(storageRef, file);
+                const url = await getDownloadURL(storageRef);
+
+                await updateSettings({ verifiedVoiceURL: url });
+                document.getElementById('voiceUploadStatus').textContent = '✓ Voice uploaded successfully';
+                e.target.value = '';
+            } catch (e) {
+                console.error('Error uploading voice:', e);
+                document.getElementById('voiceUploadStatus').textContent = '✗ Upload failed';
+            }
+        }
+
+        function handleVoiceChange() {
+            const voiceName = document.getElementById('voiceSelect').value;
+            updateSettings({ voiceName: voiceName });
+        }
+
+        async function playVerificationVoice() {
+            if (!settings.voiceEnabled) return;
+
+            if (settings.verifiedVoiceURL) {
+                // Play custom voice file
+                const audio = new Audio(settings.verifiedVoiceURL);
+                audio.play().catch(e => console.log('Voice play failed:', e));
+            } else {
+                // Use Web Speech API
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance('You have been verified');
+                    
+                    if (settings.voiceName && settings.voiceName !== 'default') {
+                        const voices = speechSynthesis.getVoices();
+                        const selectedVoice = voices.find(v => v.name === settings.voiceName);
+                        if (selectedVoice) utterance.voice = selectedVoice;
+                    }
+                    
+                    speechSynthesis.speak(utterance);
+                }
+            }
+        }
+
+        // ============================================
+        // ANIMATIONS & EFFECTS
+        // ============================================
+
+        function showVerificationOverlay() {
+            const overlay = document.getElementById('verifiedOverlay');
+            overlay.classList.add('active');
+
+            if (settings.confettiEnabled) {
+                fireConfetti();
+            }
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 3000);
+        }
+
+        function fireConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = [
+                    '#00ffa3',
+                    '#00aaff',
+                    '#ff3c3c',
+                    '#ffaa00',
+                    '#aa55ff'
+                ][Math.floor(Math.random() * 5)];
+                document.body.appendChild(confetti);
+
+                const duration = 2 + Math.random() * 1;
+                confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+
+                setTimeout(() => confetti.remove(), duration * 1000);
+            }
+        }
+
+        // ============================================
+        // COUNTDOWN TIMER
+        // ============================================
+
+        function updateCountdownTimer() {
+            if (!settings.countdownEnabled || !settings.countdownTime) return;
+
+            const section = document.getElementById('countdownSection');
+            section.style.display = 'block';
+
+            setInterval(() => {
+                const now = Date.now();
+                const timeLeft = settings.countdownTime - now;
+
+                if (timeLeft <= 0) {
+                    document.getElementById('countdownTimer').textContent = 'Registration closed';
+                    document.getElementById('submitBtn').disabled = true;
+                    return;
+                }
+
+                const hours = Math.floor(timeLeft / 3600000);
+                const minutes = Math.floor((timeLeft % 3600000) / 60000);
+                const seconds = Math.floor((timeLeft % 60000) / 1000);
+
+                document.getElementById('countdownTimer').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // ============================================
+        // COMPLETION & ALERTS
+        // ============================================
+
+        function checkCompletion() {
+            const limit = settings.contactLimit || 100;
+            const count = allContacts.length;
+
+            if (count >= limit && !localStorage.getItem('completionBannerDismissed')) {
+                showCompletionBanner();
+                playCompletionSound();
+                sendNotification();
+            }
+        }
+
+        function showCompletionBanner() {
+            document.getElementById('completionBanner').classList.add('active');
+        }
+
+        function playCompletionSound() {
+            if (!settings.completionSoundEnabled) return;
+
+            // Web Audio API phone ring
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                oscillator.connect(gain);
+                gain.connect(audioContext.destination);
+
+                oscillator.frequency.value = 800;
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+
+                oscillator.start();
+                setTimeout(() => oscillator.stop(), 200);
+
+                setTimeout(() => {
+                    oscillator.start();
+                    setTimeout(() => oscillator.stop(), 200);
+                }, 800);
+
+                setTimeout(() => {
+                    oscillator.start();
+                    setTimeout(() => oscillator.stop(), 200);
+                }, 1600);
+            } catch (e) {
+                console.log('Audio context not supported');
+            }
+        }
+
+        function sendNotification() {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('🫠 VCF List Complete!', {
+                    body: 'Download the file now and send it to the group!',
+                    icon: LOGO_BASE64,
+                    badge: LOGO_BASE64
+                });
+            }
+        }
+
+        function handleMarkComplete() {
+            showCompletionBanner();
+            playCompletionSound();
+            sendNotification();
+        }
+
+        // ============================================
+        // CUSTOMIZATION
+        // ============================================
+
+        function setupColorSwatches() {
+            const colors = [
+                { name: 'Mint Green', hex: '#00ffa3' },
+                { name: 'Blue', hex: '#00aaff' },
+                { name: 'Red', hex: '#ff3c3c' },
+                { name: 'Amber', hex: '#ffaa00' },
+                { name: 'Purple', hex: '#aa55ff' },
+                { name: 'White', hex: '#ffffff' },
+                { name: 'Orange', hex: '#ff6600' }
+            ];
+
+            const accentContainer = document.getElementById('accentSwatches');
+            const glowContainer = document.getElementById('glowSwatches');
+
+            if (accentContainer) {
+                accentContainer.innerHTML = colors.map(color => `
+                    <div class="swatch ${localStorage.getItem('accentColor') === color.hex ? 'selected' : ''}" 
+                         style="background: ${color.hex};" 
+                         onclick="setAccentColor('${color.hex}')" 
+                         title="${color.name}"></div>
+                `).join('');
+            }
+
+            if (glowContainer) {
+                glowContainer.innerHTML = colors.map(color => `
+                    <div class="swatch ${localStorage.getItem('glowColor') === color.hex ? 'selected' : ''}" 
+                         style="background: ${color.hex};" 
+                         onclick="setGlowColor('${color.hex}')" 
+                         title="${color.name}"></div>
+                `).join('');
+            }
+        }
+
+        function handleFontChange() {
+            const font = document.getElementById('fontSelect').value;
+            localStorage.setItem('fontFamily', font);
+            applyCustomizations();
+        }
+
+        async function handleLogoUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64 = event.target.result;
+                localStorage.setItem('CUSTOM_LOGO', base64);
+                document.getElementById('siteLogo').src = base64;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function togglePasswordVisibility(e) {
+            e.preventDefault();
+            const input = e.target.previousElementSibling;
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        async function handlePasswordChange() {
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+
+            if (!current || !newPass || !confirm) {
+                alert('Fill in all fields');
+                return;
+            }
+
+            if (newPass !== confirm) {
+                alert('New passwords do not match');
+                return;
+            }
+
+            try {
+                const settingsDoc = await getDoc(doc(db, 'settings', 'admin'));
+                const storedPassword = settingsDoc.data()?.password || 'azgad2024';
+
+                if (current !== storedPassword) {
+                    alert('Current password is incorrect');
+                    return;
+                }
+
+                await updateSettings({ password: newPass });
+                alert('Password changed successfully');
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            } catch (e) {
+                console.error('Error changing password:', e);
+            }
+        }
+
+        function updateFormState() {
+            const verifiedSection = document.getElementById('verifiedModeInstructions');
+            const contactForm = document.getElementById('contactForm');
+
+            if (settings.activeMode === 'verified') {
+                verifiedSection.style.display = 'block';
+                document.getElementById('modeVerified').checked = true;
+                setupVerifiedMode();
+            } else {
+                verifiedSection.style.display = 'none';
+                document.getElementById('modeFreeFree').checked = true;
+            }
+
+            document.getElementById('verifiedModeSettings').style.display = 
+                settings.activeMode === 'verified' ? 'block' : 'none';
+        }
+
+        function setupVerifiedMode() {
+            const type = settings.verificationType || 'group';
+            const container = document.getElementById('verificationTypeContainer');
+            const instructionsContainer = document.getElementById('shareInstructionsContainer');
+
+            if (settings.requiredGroupShares > 1) {
+                container.innerHTML = `
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="verifyChoice" value="group" checked>
+                            <label class="radio-label">Share to ${settings.requiredGroupShares} groups</label>
+                        </div>
+                        ${settings.requireStatus ? `<div class="radio-item">
+                            <input type="radio" name="verifyChoice" value="status">
+                            <label class="radio-label">Share to Status + ${settings.requiredGroupShares} groups</label>
+                        </div>` : ''}
+                    </div>
+                `;
+
+                const radios = container.querySelectorAll('input[name="verifyChoice"]');
+                radios.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        updateShareInstructions(radio.value);
+                    });
+                });
+            }
+
+            updateShareInstructions(type);
+        }
+
+        function updateShareInstructions(type) {
+            const container = document.getElementById('shareInstructionsContainer');
+            const trackingCode = generateTrackingCode();
+            verificationCode = trackingCode;
+
+            if (type === 'group' || type === 'both') {
+                const groupCount = settings.requiredGroupShares || 3;
+                container.innerHTML = `
+                    <div class="share-instruction">
+                        📱 Share the link below to <strong>${groupCount} WhatsApp groups</strong>:
+                        <div style="margin-top: 10px; word-break: break-all; background: rgba(0, 255, 163, 0.1); padding: 10px; border-radius: 6px; font-size: 12px; color: #00ffff;">
+                            ${window.location.href}
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #ffaa00;">Include this code in your message: <strong>${trackingCode}</strong></p>
+                    </div>
+                    ${type === 'both' ? `<div class="share-instruction" style="margin-top: 15px;">
+                        📸 Also share to your WhatsApp Status
+                    </div>` : ''}
+                `;
+            } else if (type === 'status') {
+                container.innerHTML = `
+                    <div class="share-instruction">
+                        📸 Share this link to your WhatsApp Status:
+                        <div style="margin-top: 10px; word-break: break-all; background: rgba(0, 255, 163, 0.1); padding: 10px; border-radius: 6px; font-size: 12px; color: #00ffff;">
+                            ${window.location.href}
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('visitorTrackingCode').textContent = trackingCode;
+            document.getElementById('shareConfirmBtn').style.display = 'block';
+        }
+
+        function handleShareConfirmation() {
+            sessionStorage.setItem('shareVerified', 'true');
+            document.getElementById('verifiedModeInstructions').style.display = 'none';
+            document.getElementById('contactForm').style.display = 'block';
+        }
+
+        // ============================================
+        // BROADCAST
+        // ============================================
+
+        function generateBroadcastLink() {
+            const message = document.getElementById('broadcastMessage').value;
+            const encoded = encodeURIComponent(message);
+            const link = `https://wa.me/?text=${encoded}`;
+            document.getElementById('broadcastLink').value = link;
+        }
+
+        function copyBroadcastLink() {
+            const link = document.getElementById('broadcastLink');
+            link.select();
+            document.execCommand('copy');
+            alert('Link copied!');
+        }
+
+        function openBroadcastGroup() {
+            const message = settings.broadcastMessage || '🫠 VCF list is complete! Download and upload the file now.';
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/?text=${encoded}`, '_blank');
+        }
+
+        // ============================================
+        // ANALYTICS
+        // ============================================
+
+        function updateAnalytics() {
+            if (!settings.analyticsEnabled) return;
+
+            const hourlyData = {};
+            const now = new Date();
+
+            allContacts.forEach(contact => {
+                const date = new Date(contact.timestamp?.toDate());
+                const hour = date.getHours();
+                hourlyData[hour] = (hourlyData[hour] || 0) + 1;
+            });
+
+            const labels = Array.from({ length: 24 }, (_, i) => i + ':00');
+            const data = labels.map((_, i) => hourlyData[i] || 0);
+            const peakHour = Math.max(...data);
+
+            document.getElementById('statTotal').textContent = allContacts.length;
+            document.getElementById('statPeakHour').textContent = data.indexOf(peakHour);
+
+            if (signupChart) {
+                signupChart.data.labels = labels;
+                signupChart.data.datasets[0].data = data;
+                signupChart.update();
+            } else {
+                const ctx = document.getElementById('signupChart');
+                if (ctx) {
+                    signupChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Signups per Hour',
+                                data: data,
+                                borderColor: '#00ffa3',
+                                backgroundColor: 'rgba(0, 255, 163, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: { color: '#ffffff' }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    ticks: { color: '#aaaaaa' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                },
+                                x: {
+                                    ticks: { color: '#aaaaaa' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // ============================================
+        // ACTIVITY FEED
+        // ============================================
+
+        function addToActivityFeed(name) {
+            if (!settings.feedEnabled) return;
+
+            const feed = document.getElementById('activityFeed');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = `${name} just joined 🫠`;
+
+            feed.appendChild(toast);
+
+            const toasts = feed.querySelectorAll('.toast');
+            if (toasts.length > 3) {
+                toasts[0].remove();
+            }
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Listen to contacts for feed updates
+        let lastContactCount = 0;
+        onSnapshot(collection(db, 'contacts'), (snapshot) => {
+            const newContacts = snapshot.docs.slice(lastContactCount);
+            newContacts.forEach(doc => {
+                addToActivityFeed(doc.data().name);
+            });
+            lastContactCount = snapshot.docs.length;
+        });
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function generateEditToken() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        function generateTrackingCode() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function setAccentColor(color) {
+            localStorage.setItem('accentColor', color);
+            applyCustomizations();
+            setupColorSwatches();
+        }
+
+        function setGlowColor(color) {
+            localStorage.setItem('glowColor', color);
+            applyCustomizations();
+            setupColorSwatches();
+        }
+
+        function showEditLink() {
+            // Edit link could be added to post-submission screen
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+        window.addEventListener('speechSynthesis.onvoiceschanged', () => {
+            if (adminAuthenticated) populateVoiceDropdown();
+        });
+
+        // Export functions for global scope
+        window.deleteContact = deleteContact;
+        window.setAccentColor = setAccentColor;
+        window.setGlowColor = setGlowColor;
+
+    </script>
+</body>
+</html>
